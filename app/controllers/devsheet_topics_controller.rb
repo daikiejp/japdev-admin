@@ -56,7 +56,7 @@ class DevsheetTopicsController < ApplicationController
     topics_data = @category.devsheet_topics.order(:created_at).map(&:to_export_hash)
 
     send_data JSON.pretty_generate(topics_data),
-              filename: "#{@category.name.downcase}-all-topics.json",
+              filename: "#{@category.name.downcase}-topics.json",
               type: "application/json",
               disposition: "attachment"
   end

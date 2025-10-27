@@ -49,7 +49,7 @@ class DevsheetSectionsController < ApplicationController
     sections_data = @topic.devsheet_sections.map(&:to_export_hash)
     send_data JSON.pretty_generate(sections_data),
 
-              filename: "#{@topic.name.downcase.gsub(' ', '-')}.json",
+              filename: "#{@topic.slug.downcase.gsub(' ', '-')}.json",
               type: "application/json",
               disposition: "attachment"
   end
