@@ -42,11 +42,11 @@
       <div class="flex items-start gap-4 mb-4">
         <div
           class="w-16 h-16 flex items-center justify-center rounded-lg"
-          style="background: <%= category.color %>;"
+          style="background: <%= category.color %>20;"
         >
           <% if category.logo.present? %>
             <%= image_tag category.logo,
-            class: "w-12 h-12 object-contain",
+            class: "w-10 h-10 object-contain",
             alt: category.name,
             onerror: "this.src='https://via.placeholder.com/48'" %>
           <% else %>
