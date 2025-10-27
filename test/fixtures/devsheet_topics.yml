@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  devsheet_category: one
+  name: MyString
+  description: MyText
+
+two:
+  devsheet_category: two
+  name: MyString
+  description: MyText

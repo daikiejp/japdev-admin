@@ -1,0 +1,83 @@
+<% content_for :title, "記事 - JapDev" %>
+
+<div class="mb-12 text-center">
+  <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+    最新の開発情報を
+    <span
+      class="
+        bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent
+      "
+    >一箇所で</span>
+  </h2>
+  <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+    最新の技術記事とチュートリアルをチェック
+  </p>
+</div>
+
+<div class="flex justify-between items-center mb-6">
+  <h3 class="text-2xl font-bold text-gray-900">記事一覧</h3>
+  <div class="flex gap-3">
+    <%= link_to "JSONエクスポート",
+    export_json_articles_path,
+    class:
+      "px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-all" %>
+    <%= link_to "新規作成",
+    new_article_path,
+    class:
+      "px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all" %>
+  </div>
+</div>
+
+<div class="space-y-4">
+  <% @articles.each do |article| %>
+    <div
+      class="
+        bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg
+        transition-all hover:border-emerald-200 group
+      "
+    >
+      <div class="flex items-start gap-4">
+        <% if article.image.present? %>
+          <%= image_tag article.image,
+          class: "w-32 h-32 object-cover rounded-lg",
+          alt: article.title %>
+        <% end %>
+        <div class="flex-1">
+          <div class="flex items-start justify-between mb-2">
+            <div>
+              <h3
+                class="
+                  text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors
+                  mb-1
+                "
+              >
+                <%= link_to article.title, article %>
+              </h3>
+              <p class="text-sm text-gray-500"><%= article.source %>
+                •
+                <%= article.date&.strftime("%Y年%m月%d日") %></p>
+            </div>
+          </div>
+          <p class="text-gray-600 mb-3"><%= article.description %></p>
+          <div class="flex items-center gap-2 flex-wrap">
+            <% (article.tags || []).each do |tag| %>
+              <span class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded-md"><%= tag %></span>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <%= link_to "編集",
+          edit_article_path(article),
+          class: "px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg" %>
+          <%= button_to "削除",
+          article,
+          method: :delete,
+          data: {
+            turbo_confirm: "本当に削除しますか？",
+          },
+          class: "px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

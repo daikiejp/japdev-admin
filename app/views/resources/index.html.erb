@@ -1,0 +1,71 @@
+<% content_for :title, "リソース - JapDev" %>
+
+<div class="mb-12 text-center">
+  <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+    開発
+    <span
+      class="
+        bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent
+      "
+    >リソース</span>
+  </h2>
+  <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+    便利な開発ツールとサービスのコレクション
+  </p>
+</div>
+
+<div class="flex justify-between items-center mb-6">
+  <h3 class="text-2xl font-bold text-gray-900">リソース一覧</h3>
+  <div class="flex gap-3">
+    <%= link_to "JSONエクスポート",
+    export_json_resources_path,
+    class:
+      "px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-all" %>
+    <%= link_to "新規作成",
+    new_resource_path,
+    class:
+      "px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all" %>
+  </div>
+</div>
+
+<% @resources.group_by(&:category).each do |category, resources| %>
+  <div class="mb-8">
+    <h4 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+      <%= category %>
+    </h4>
+    <div class="grid md:grid-cols-2 gap-4">
+      <% resources.each do |resource| %>
+        <div
+          class="
+            bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg
+            transition-all hover:border-emerald-200 group
+          "
+        >
+          <div class="flex items-start justify-between mb-3">
+            <h5
+              class="
+                text-lg font-bold text-gray-900 group-hover:text-emerald-600 transition-colors
+              "
+            >
+              <%= link_to resource.title, resource.url, target: "_blank" %>
+            </h5>
+          </div>
+          <p class="text-gray-600 mb-4"><%= resource.desc %></p>
+          <div class="flex gap-2">
+            <%= link_to "編集",
+            edit_resource_path(resource),
+            class: "px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg" %>
+            <%= button_to "削除",
+            resource,
+            method: :delete,
+            data: {
+              turbo_confirm: "本当に削除しますか？",
+            },
+            class: "px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

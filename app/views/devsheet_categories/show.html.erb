@@ -1,0 +1,107 @@
+<% content_for :title, "#{@category.name} - チートシート - JapDev" %>
+
+<div class="mb-8">
+  <%= link_to "← チートシート一覧に戻る",
+  devsheet_categories_path,
+  class: "text-emerald-600 hover:text-emerald-700 font-medium" %>
+</div>
+
+<div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-8">
+  <div class="flex items-start gap-6">
+    <% if @category.logo.present? %>
+      <%= image_tag @category.logo, class: "w-20 h-20 object-contain", alt: @category.name %>
+    <% else %>
+      <div
+        class="
+          w-20 h-20 rounded-xl flex items-center justify-center text-white font-bold
+          text-3xl
+        "
+        style="background-color: <%= @category.color || '#6B7280' %>"
+      >
+        <%= @category.name[0] %>
+      </div>
+    <% end %>
+
+    <div class="flex-1">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @category.name %></h1>
+      <p class="text-lg text-gray-600 mb-4"><%= @category.description %></p>
+      <div class="flex gap-3">
+        <%= link_to "JSONエクスポート",
+        export_json_devsheet_category_path(@category),
+        data: {
+          turbo: false,
+        },
+        class: "px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600" %>
+        <%= link_to "カテゴリ編集",
+        edit_devsheet_category_path(@category),
+        class:
+          "px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-2xl font-bold text-gray-900">トピック一覧</h2>
+  <div class="flex gap-3">
+    <%= link_to "全トピックJSON",
+    export_all_topics_json_devsheet_category_devsheet_topics_path(@category),
+    data: {
+      turbo: false,
+    },
+    class:
+      "px-4 py-2 bg-purple-500 text-white rounded-lg font-medium hover:bg-purple-600 transition-all" %>
+    <%= link_to "新規トピック",
+    new_devsheet_category_devsheet_topic_path(@category),
+    class:
+      "px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all" %>
+  </div>
+</div>
+
+<% if @topics.any? %>
+  <div class="grid md:grid-cols-2 gap-4">
+    <% @topics.each do |topic| %>
+      <div
+        class="
+          bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg
+          transition-all hover:border-emerald-200 group
+        "
+      >
+        <h3
+          class="
+            text-xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors
+            mb-2
+          "
+        >
+          <%= link_to topic.name, devsheet_category_devsheet_topic_path(@category, topic) %>
+        </h3>
+        <p class="text-gray-600 mb-4"><%= topic.description %></p>
+        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+          <span class="text-sm text-gray-500">
+            <%= topic.devsheet_sections.count %>
+            セクション
+          </span>
+          <div class="flex gap-2">
+            <%= link_to "編集",
+            edit_devsheet_category_devsheet_topic_path(@category, topic),
+            class: "px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg" %>
+            <%= button_to "削除",
+            devsheet_category_devsheet_topic_path(@category, topic),
+            method: :delete,
+            data: {
+              turbo_confirm: "本当に削除しますか？",
+            },
+            class: "px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="text-center py-12 bg-gray-50 rounded-lg">
+    <p class="text-gray-600 mb-4">まだトピックがありません</p>
+    <%= link_to "最初のトピックを作成",
+    new_devsheet_category_devsheet_topic_path(@category),
+    class: "text-emerald-600 hover:text-emerald-700 font-medium" %>
+  </div>
+<% end %>

@@ -1,0 +1,16 @@
+<% content_for :title, "セクション編集 - #{@topic.name} - JapDev" %>
+
+<div class="max-w-4xl mx-auto">
+  <div class="mb-8">
+    <%= link_to "← #{@topic.name}に戻る",
+    devsheet_category_devsheet_topic_path(@category, @topic),
+    class: "text-emerald-600 hover:text-emerald-700 font-medium" %>
+  </div>
+
+  <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= @section.title %>
+    セクション編集</h1>
+  <p class="text-gray-600 mb-8">トピック:
+    <%= @topic.name %><%= @category.name %></p>
+
+  <%= render "form", category: @category, topic: @topic, section: @section %>
+</div>

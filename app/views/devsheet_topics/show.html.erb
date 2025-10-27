@@ -1,0 +1,227 @@
+<% content_for :title, "#{@topic.name} - #{@category.name} - チートシート - JapDev" %>
+
+<div class="mb-8">
+  <%= link_to "← #{@category.name}に戻る",
+  devsheet_category_path(@category),
+  class: "text-emerald-600 hover:text-emerald-700 font-medium" %>
+</div>
+
+<div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100 mb-8">
+  <div class="flex items-start justify-between">
+    <div class="flex-1">
+      <div class="flex items-center gap-3 mb-2">
+        <h1 class="text-4xl font-bold text-gray-900"><%= @topic.name %></h1>
+        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-md"><%= @category.name %></span>
+      </div>
+      <p class="text-lg text-gray-600 mb-4"><%= @topic.description %></p>
+      <div class="flex gap-3">
+        <%= link_to "全セクションJSON",
+        export_section_json_devsheet_category_devsheet_topic_devsheet_sections_path(
+          @category,
+          @topic,
+        ),
+        data: {
+          turbo: false,
+        },
+        class:
+          "px-4 py-2 bg-purple-500 text-white rounded-lg text-sm hover:bg-purple-600" %>
+        <%= link_to "トピック編集",
+        edit_devsheet_category_devsheet_topic_path(@category, @topic),
+        class:
+          "px-4 py-2 bg-emerald-500 text-white rounded-lg text-sm hover:bg-emerald-600" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex justify-between items-center mb-6">
+  <h2 class="text-2xl font-bold text-gray-900">セクション一覧</h2>
+  <%= link_to "新規セクション",
+  new_devsheet_category_devsheet_topic_devsheet_section_path(@category, @topic),
+  class:
+    "px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-lg font-medium hover:shadow-lg transition-all" %>
+</div>
+
+<% if @sections.any? %>
+  <div class="space-y-6">
+    <% @sections.each do |section| %>
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex-1">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2"><%= section.title %></h3>
+            <% if section.description.present? %>
+              <p class="text-gray-600 mb-4"><%= section.description %></p>
+            <% end %>
+          </div>
+          <div class="flex gap-2">
+            <%= link_to "編集",
+            edit_devsheet_category_devsheet_topic_devsheet_section_path(
+              @category,
+              @topic,
+              section,
+            ),
+            class: "px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded-lg" %>
+            <%= button_to "削除",
+            devsheet_category_devsheet_topic_devsheet_section_path(
+              @category,
+              @topic,
+              section,
+            ),
+            method: :delete,
+            data: {
+              turbo_confirm: "本当に削除しますか？",
+            },
+            class: "px-3 py-1 text-sm text-red-600 hover:bg-red-50 rounded-lg" %>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <% section.devsheet_code_blocks.each do |code_block, cb_index| %>
+            <div class="border border-gray-200 rounded-lg overflow-hidden">
+              <div
+                class="
+                  bg-gray-100 px-4 py-2 flex items-center justify-between border-b border-gray-200
+                "
+              >
+                <div>
+                  <% if code_block.title.present? %>
+                    <span class="font-medium text-gray-900"><%= code_block.title %></span>
+                  <% end %>
+                  <% if code_block.filename.present? %>
+                    <span class="text-sm text-gray-600 ml-2"><%= code_block.filename %></span>
+                  <% end %>
+                </div>
+                <div class="flex gap-2">
+                  <span
+                    class="
+                      px-2 py-1 bg-white text-gray-700 text-xs rounded border border-gray-300
+                    "
+                  >
+                    <%= code_block.language %>
+                  </span>
+                  <button
+                    onclick="copyCode(this)"
+                    data-code="<%= code_block.code.gsub('"', '&quot;').gsub("\n", '&#10;') %>"
+                    class="
+                      px-3 py-1 bg-white text-gray-700 text-xs rounded border border-gray-300
+                      hover:bg-gray-100
+                    "
+                  >
+                    コピー
+                  </button>
+                </div>
+              </div>
+
+              <% if code_block.devsheet_code_block_tabs.any? %>
+                <div class="bg-gray-50 border-b border-gray-200">
+                  <div class="flex gap-2 px-4 pt-2">
+                    <% code_block.devsheet_code_block_tabs.each_with_index do |tab, tab_index| %>
+                      <button
+                        onclick="switchTab(event, 'cb-<%= cb_index %>-tab-<%= tab_index %>')"
+                        class="
+                          tab-button px-4 py-2 text-sm font-medium rounded-t-lg
+                          <%= tab_index == 0 ? 'bg-white text-emerald-600 border-t-2 border-x-2 border-emerald-500' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' %>
+                        "
+                      >
+                        <%= tab.label %>
+                      </button>
+                    <% end %>
+                  </div>
+                </div>
+
+                <% code_block.devsheet_code_block_tabs.each_with_index do |tab, tab_index| %>
+                  <div
+                    id="cb-<%= cb_index %>-tab-<%= tab_index %>"
+                    class="tab-content <%= 'hidden' unless tab_index == 0 %>"
+                  >
+                    <div class="relative">
+                      <pre class="p-4 bg-gray-50 overflow-x-auto text-sm"><code class="language-<%= tab.language || code_block.language %>"><%= tab.code %></code></pre>
+                      <button
+                        onclick="copyCode(this)"
+                        data-code="<%= tab.code.gsub('"', '&quot;').gsub("\n", '&#10;') %>"
+                        class="
+                          absolute top-2 right-2 px-3 py-1 bg-white text-gray-700 text-xs rounded border
+                          border-gray-300 hover:bg-gray-100
+                        "
+                      >
+                        コピー
+                      </button>
+                    </div>
+                  </div>
+                <% end %>
+
+              <% else %>
+                <div class="relative">
+                  <pre class="p-4 bg-gray-50 overflow-x-auto text-sm"><code><%= code_block.code %></code></pre>
+                  <button
+                    onclick="copyCode(this)"
+                    data-code="<%= code_block.code.gsub('"', '&quot;').gsub("\n", '&#10;') %>"
+                    class="
+                      absolute top-2 right-2 px-3 py-1 bg-white text-gray-700 text-xs rounded border
+                      border-gray-300 hover:bg-gray-100
+                    "
+                  >
+                    コピー
+                  </button>
+                </div>
+              <% end %>
+
+              <% if code_block.highlight_lines.present? && code_block.highlight_lines.any? %>
+                <div class="bg-yellow-50 px-4 py-2 border-t border-gray-200">
+                  <span class="text-xs text-yellow-800">ハイライト行:
+                    <%= code_block.highlight_lines.join(", ") %></span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="text-center py-12 bg-gray-50 rounded-lg">
+    <p class="text-gray-600 mb-4">まだセクションがありません</p>
+    <%= link_to "最初のセクションを作成",
+    new_devsheet_category_devsheet_topic_devsheet_section_path(@category, @topic),
+    class: "text-emerald-600 hover:text-emerald-700 font-medium" %>
+  </div>
+<% end %>
+
+<script>
+function copyCode(button) {
+  const code = button.getAttribute('data-code')
+    .replace(/&quot;/g, '"')
+    .replace(/&#10;/g, '\n')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+
+  navigator.clipboard.writeText(code).then(() => {
+    const originalText = button.textContent;
+    button.textContent = 'コピー完了！';
+    button.classList.add('bg-emerald-100', 'text-emerald-700');
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.classList.remove('bg-emerald-100', 'text-emerald-700');
+    }, 2000);
+  });
+}
+
+function switchTab(event, tabId) {
+  event.preventDefault();
+  const container = event.target.closest('.border');
+
+  container.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.add('hidden');
+  });
+
+  container.querySelectorAll('.tab-button').forEach(btn => {
+    btn.classList.remove('bg-white', 'text-emerald-600', 'border-t-2', 'border-x-2', 'border-emerald-500');
+    btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+  });
+
+  document.getElementById(tabId).classList.remove('hidden');
+
+  event.target.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+  event.target.classList.add('bg-white', 'text-emerald-600', 'border-t-2', 'border-x-2', 'border-emerald-500');
+}
+</script>
