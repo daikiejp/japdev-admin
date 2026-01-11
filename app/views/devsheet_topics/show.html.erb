@@ -25,6 +25,14 @@
         },
         class:
           "px-4 py-2 bg-purple-500 text-white rounded-lg text-sm hover:bg-purple-600" %>
+
+        <%= link_to "セクションをインポート",
+        import_form_devsheet_category_devsheet_topics_path(
+          @category,
+          topic_id: @topic.id,
+        ),
+        class: "px-4 py-2 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600" %>
+
         <%= link_to "トピック編集",
         edit_devsheet_category_devsheet_topic_path(@category, @topic),
         class:

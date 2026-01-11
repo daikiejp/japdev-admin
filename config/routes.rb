@@ -29,6 +29,8 @@ Rails.application.routes.draw do
     end
     collection do
       get :export_all_json
+      # get :import_form
+      # post :import_json
     end
 
     resources :devsheet_topics, path: "topics" do
@@ -37,6 +39,8 @@ Rails.application.routes.draw do
       end
       collection do
         get :export_all_topics_json
+        get :import_form
+        post :import_sections
       end
 
       resources :devsheet_sections, path: "sections" do
