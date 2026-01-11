@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
-  root "articles#index"
+  root "devsheet_categories#index"
 
-  resources :articles do
-    collection do
-      get :export_json
-    end
-  end
+  # Deprecated Articles
+  # resources :articles do
+  #  collection do
+  #    get :export_json
+  #  end
+  # end
 
   resources :resources do
     collection do

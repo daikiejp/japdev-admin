@@ -53,19 +53,15 @@
 
           <div class="hidden md:flex items-center gap-6">
             <nav class="flex items-center gap-4">
-              <%= link_to "記事",
-              articles_path,
-              class:
-                "text-md font-medium #{current_page?(articles_path) ? "text-emerald-600" : "text-gray-600 hover:text-emerald-600"}" %>
-              <%= link_to "最新バージョン",
-              versions_path,
-              class:
-                "text-md font-medium #{current_page?(versions_path) ? "text-emerald-600" : "text-gray-600 hover:text-emerald-600"}" %>
               <%= link_to "チートシート",
               devsheet_categories_path,
               class:
                 "text-sm font-medium #{current_page?(devsheet_categories_path) ? "text-emerald-600" : "text-gray-600"}" %>
-              <%= link_to "リソース",
+              <%= link_to "最新バージョン",
+              versions_path,
+              class:
+                "text-md font-medium #{current_page?(versions_path) ? "text-emerald-600" : "text-gray-600 hover:text-emerald-600"}" %>
+             <%= link_to "リソース",
               resources_path,
               class:
                 "text-md font-medium #{current_page?(resources_path) ? "text-emerald-600" : "text-gray-600 hover:text-emerald-600"}" %>
@@ -90,18 +86,14 @@
         class="hidden md:hidden bg-white border-b border-gray-200 p-4"
       >
         <nav class="flex flex-col gap-3">
-          <%= link_to "記事",
-          articles_path,
-          class:
-            "text-sm font-medium #{current_page?(articles_path) ? "text-emerald-600" : "text-gray-600"}" %>
-          <%= link_to "最新バージョン",
-          versions_path,
-          class:
-            "text-sm font-medium #{current_page?(versions_path) ? "text-emerald-600" : "text-gray-600"}" %>
           <%= link_to "チートシート",
           devsheet_categories_path,
           class:
             "text-sm font-medium #{current_page?(devsheet_categories_path) ? "text-emerald-600" : "text-gray-600"}" %>
+          <%= link_to "最新バージョン",
+          versions_path,
+          class:
+            "text-sm font-medium #{current_page?(versions_path) ? "text-emerald-600" : "text-gray-600"}" %>
           <%= link_to "リソース",
           resources_path,
           class:
@@ -139,9 +131,8 @@
           <div>
             <h4 class="font-bold text-gray-900 mb-3">コンテンツ</h4>
             <ul class="space-y-2 text-md text-gray-600">
-              <li><%= link_to "記事", articles_path, class: "hover:text-emerald-600" %></li>
-              <li><%= link_to "最新バージョン", versions_path, class: "hover:text-emerald-600" %></li>
               <li><%= link_to "チートシート", devsheet_categories_path, class: "hover:text-emerald-600" %></li>
+              <li><%= link_to "最新バージョン", versions_path, class: "hover:text-emerald-600" %></li>
               <li><%= link_to "リソース", resources_path, class: "hover:text-emerald-600" %></li>
             </ul>
           </div>
